@@ -79,10 +79,11 @@
    
     let counter = 0;
     
-    function numberGenerator() { 
-      for(let i = 0; i< cellsList.length; i++){
-        if(arrOfBombs.indexOf(i) == -1) {  // if it is not a bomb then do : 
-          if(arrOfBombs.indexOf(i-11) != -1){
+    function numberGenerator(e) { 
+      for(let i = 0; i< cellsList.length; i++){ 
+         if(arrOfBombs.indexOf(i) == -1) {  // if it is not a bomb then do : 
+          if(e.target == cellLists[i]){
+           if(arrOfBombs.indexOf(i-11) != -1){
             counter ++;
         }
           if(arrOfBombs.indexOf(i-10) != -1){
@@ -110,13 +111,14 @@
             cellsList[i].textContent = counter;
           }
          
-        }  
+         } 
+       } 
         counter = 0;
     
     } 
 }
 
-    numberGenerator();  
+   // numberGenerator();  
   
          
     
@@ -139,6 +141,7 @@
                  
             });
         
+        mytbl.addEventListener('click', numberGenerator);    
         
       
 
