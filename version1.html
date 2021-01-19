@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>MineSweeper</title>
+        <style>
+            table {
+              border: 2px solid black;
+              margin: auto;
+            }
+            
+            td {
+              border: 2px solid black;
+              padding: 10px;
+              background-color: lavender;
+            }
+        </style>
+    </head>
+    <body>
+
+        <script>
+    /*----------------------------random------------------------------------------------*/     
+        function random(max, min) {
+          return Math.floor(Math.random() * (max - min +1) + min);  
+        } 
+    /*----------------------creating table dynamically----------------------------------*/
+        function createTable() {
+          
+          const myTable = document.createElement('table');
+          myTable.setAttribute('id', `myTable`);
+        
+          for(let i = 0; i<=9; i++){
+            const row = document.createElement('tr');
+         
+            for(let j = 0; j<=9; j++){
+              const cell = document.createElement('td');
+              cell.setAttribute('id', `[${i}][${j}]`);
+              row.appendChild(cell);
+            }
+              
+            myTable.appendChild(row);
+            }
+            document.body.appendChild(myTable);
+        } 
+    /*-------------------------calling function--------------------------------------------*/
+        createTable();  
+
+    /*--------------------------global scope arguments-------------------------------------*/
+        const cellsList = document.querySelectorAll('td');
+        let mycells = {}; 
+        let arrOfBombs = [];
+
+    /*-----------------------------making bombs------------------------------------------*/    
+        function bombGenerator(number) {
+          let myRandom ;  
+          let i = 0;
+
+          while(i<number){ 
+            myRandom = random(0,99);    
+            if(arrOfBombs.indexOf(myRandom) == -1){
+              arrOfBombs.push(myRandom);
+              Object.defineProperty(mycells, `${arrOfBombs[i]}`, {
+                value: `bomb`,
+                writable: true,
+                enumerable: true, 
+               }); 
+               
+               i++;
+          }    
+          } 
+          console.log(`arrOfBombs`, arrOfBombs);
+          console.log(mycells);
+        }
+    /*--------------------------------------------------------------------------------*/
+
+        bombGenerator(25);
+
+    /*--------------------------------------------------------------------------------*/
+   
+    let counter = 0;
+    
+    function numberGenerator() { 
+      for(let i = 0; i< cellsList.length; i++){
+        if(arrOfBombs.indexOf(i) == -1) {  // if it is not a bomb then do : 
+          if(arrOfBombs.indexOf(i-11) != -1){
+            counter ++;
+        }
+          if(arrOfBombs.indexOf(i-10) != -1){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i-9) != -1){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i-1) != -1){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i+1) != -1){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i+9) != -1){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i+10) != -1){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i+11) != -1){
+            counter ++;
+          }
+          if (counter != 0){ 
+            cellsList[i].textContent = counter;
+          }
+         
+        }  
+        counter = 0;
+    
+    } 
+}
+
+    numberGenerator();  
+  
+         
+    
+    
+
+
+
+
+        const mytlb = document.querySelector('table');
+         
+        mytlb.addEventListener('click', function(e){
+          for(let i = 0; i<cellsList.length; i++){
+            if(arrOfBombs.indexOf(i) != -1){
+              if(e.target == cellsList[i]){
+                e.target.style.backgroundColor = 'black';    
+              }
+            }
+               
+        }
+                 
+            });
+        
+        
+      
+
+        </script>
+    </body>
+
+</html>
