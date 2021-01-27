@@ -1,0 +1,314 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>MineSweeper</title>
+        <style>
+            table {
+              border: 2px solid black;
+              margin: auto;
+            }
+            
+            td {
+              border: 2px solid black;
+              padding: 10px;
+              background-color: lavender;
+            }
+
+            p {
+                font-size: 30px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+
+        <script>
+
+        const p = document.createElement('p');
+        document.body.appendChild(p);
+        
+        const para = document.querySelector('p');
+     
+    /*----------------------------random------------------------------------------------*/     
+        function random(max, min) {
+          return Math.floor(Math.random() * (max - min +1) + min);  
+        } 
+    /*----------------------creating table dynamically----------------------------------*/
+        function createTable() {
+          
+          const myTable = document.createElement('table');
+          myTable.setAttribute('id', `myTable`);
+        
+          for(let i = 0; i<=9; i++){
+            const row = document.createElement('tr');
+         
+            for(let j = 0; j<=9; j++){
+              const cell = document.createElement('td');
+              cell.setAttribute('id', `[${i}][${j}]`);
+              row.appendChild(cell);
+            }
+              
+            myTable.appendChild(row);
+            }
+            document.body.appendChild(myTable);
+        } 
+    /*-------------------------calling function--------------------------------------------*/
+        createTable();  
+
+    /*--------------------------global scope arguments-------------------------------------*/
+        const cellsList = document.querySelectorAll('td');
+        let mycells = {}; 
+        let arrOfBombs = [];
+
+    /*-----------------------------making bombs------------------------------------------*/    
+        function bombGenerator(number) {
+          let myRandom ;  
+          let i = 0;
+
+          while(i<number){ 
+            myRandom = random(0,99);    
+            if(arrOfBombs.indexOf(myRandom) == -1){
+              arrOfBombs.push(myRandom);
+              Object.defineProperty(mycells, `${arrOfBombs[i]}`, {
+                value: `bomb`,
+                writable: true,
+                enumerable: true, 
+               }); 
+               
+               i++;
+          }    
+          }
+          
+          console.log(`arrOfBombs`, arrOfBombs);
+          console.log(mycells);
+        }
+    /*--------------------------------------------------------------------------------*/
+       
+        bombGenerator(12);
+
+    /*---------------------------------------------------------------------------------*/  
+       let numbers = [];
+
+       function num() {
+         let bomb;
+         for(let i = 0; i<arrOfBombs.length; i++) {
+           bomb = arrOfBombs[i];
+           if(bomb % 10 != 9){  
+             numbers.push(bomb-9,bomb+11,bomb+1);
+            }
+           if(bomb % 10 != 0){
+             numbers.push(bomb-11,bomb-1,bomb+9);
+           }   
+           numbers.push(bomb+10,bomb-10);
+         } 
+       } 
+       
+      num(); 
+      console.log('numbers: ',numbers);
+    /*--------------------------------------------------------------------------------*/
+   
+    let counter = 0;
+    
+    function numberGenerator(e) { 
+      for(let i = 0; i< cellsList.length; i++){
+        if(arrOfBombs.indexOf(i) == -1) {
+         if(e.target == cellsList[i]){
+       
+           
+          if(arrOfBombs.indexOf(i-11) != -1 && (i % 10 != 0)){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i-10) != -1){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i-9) != -1 && (i % 10 != 9)){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i-1) != -1 && (i % 10 != 0)){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i+1) != -1 && (i % 10 != 9)){
+            counter ++;
+          
+          }
+          if(arrOfBombs.indexOf(i+9) != -1 && (i % 10 != 0)){
+            counter ++;
+          
+          }
+           if(arrOfBombs.indexOf(i+10) != -1){
+            counter ++;
+           
+          }
+         if(arrOfBombs.indexOf(i+11) != -1 && (i % 10 != 9)){
+            counter ++;
+          }
+         
+        if (!(counter == 0)){
+         e.target.textContent = counter;
+          }
+         
+        }  
+      }
+        counter = 0;
+    
+    } 
+    }
+   
+    //numberGenerator();  
+  
+     /*--------------------------------------------------------------------------------*/
+        function bombClick(e){
+          for(let i = 0; i<cellsList.length; i++){
+            if(arrOfBombs.indexOf(i) != -1){
+              if(e.target == cellsList[i]){
+                for(let j = 0; j<arrOfBombs.length; j++){ 
+                  cellsList[arrOfBombs[j]].style.backgroundColor = 'black';
+                //cellsList[arrOfBombs[j]].value = `bomb`;
+                  para.textContent = `GAME OVER`;
+          //???       mytbl.removeEventListener('click',bombClick);
+                }
+              }
+            }
+           }
+                 
+        };
+    /*---------------------------------------------------------------------------------------*/
+    let jR, jRB, jRU;
+    let jB, jBR, jBL;
+    let jL, jLU, jLB;
+    let jU, jUR, jUL;
+
+  function emptyHome(e) {
+     
+          for(let i = 0; i<cellsList.length; i++){
+            if(e.target == cellsList[i]){
+             
+              if(arrOfBombs.indexOf(i) == -1 && numbers.indexOf(i) == -1){ 
+        
+
+                cellsList[i].textContent = `MT`;      console.log(`first`,cellsList[i]);
+
+                jR = i+1;      
+                while(jR < 100 && jR>=0){ 
+                  if(jR % 10 == 9) {cellsList[jR].textContent = `MT`; break;}
+                  else{            
+                    if((arrOfBombs.indexOf(jR) == -1 && numbers.indexOf(jR) == -1) ){ 
+                      cellsList[jR].textContent = `MT`;   console.log(cellsList[jR]);
+                      jRB = jR+10;
+                      while(jRB < 100 && jRB>=0){
+                        if((arrOfBombs.indexOf(jRB) == -1 && numbers.indexOf(jRB) == -1)){
+                          cellsList[jRB].textContent = 'MT';    console.log(cellsList[jRB]);
+                          jRB = jRB + 10; 
+                        }else{ break;}
+                      }
+                      jRU = jR-10;
+                      while(jRU<100 && jRU>=0){
+                        if((arrOfBombs.indexOf(jRU) == -1 && numbers.indexOf(jRU) == -1)){
+                          cellsList[jRU].textContent = 'MT';    console.log(cellsList[jRU]);
+                          jRU = jRU-10;
+                        } else{break;} 
+                      }
+                      jR = jR+1;            
+                    }else {break;}
+                }
+                } 
+
+                jB = i+10;
+                while(jB<100 && jB>=0) {   
+                  if((arrOfBombs.indexOf(jB) == -1 && numbers.indexOf(jB) == -1) ){
+                    cellsList[jB].textContent = `MT`;    console.log(cellsList[jB]);
+                    jBR = jB+1;
+                    while(jBR<100 && jBR>=0){
+                      if(jBR % 10 == 9) {cellsList[jBR].textContent = `MT`; break;}
+                      if((arrOfBombs.indexOf(jBR) == -1 && numbers.indexOf(jBR) == -1) ){
+                        cellsList[jBR].textContent = `MT`;       console.log(cellsList[jBR]);
+                        jBR = jBR+1;
+                      }else{break;}
+                    }
+                   jBL = jB-1;
+                    while(jBL<100 && jBL>=0){
+                      if(jBL % 10 == 0) {cellsList[jBL].textContent = `MT`; break;}  
+                      if((arrOfBombs.indexOf(jBL) == -1 && numbers.indexOf(jBL) == -1) ){
+                        cellsList[jBL].textContent = `MT`;    console.log(cellsList[jB]);
+                        jBL = jBL-1;
+                      } else{ break;}
+                    }
+                    jB = jB+10;         
+                  }else {break;}
+                }   
+                 
+               jL = i-1;   
+                while(jL < 100 && jL >= 0){
+                  if(jL % 10 == 0) {cellsList[jL].textContent = `MT`;  break;}
+                  else {
+                    if((arrOfBombs.indexOf(jL) == -1 && numbers.indexOf(jL) == -1)){
+                      cellsList[jL].textContent = `MT`;       console.log(cellsList[jL]);
+                     jLU = jL-10;
+                      while(jLU<100 && jLU>=0){
+                        if((arrOfBombs.indexOf(jLU) == -1 && numbers.indexOf(jLU) == -1)){
+                          cellsList[jLU].textContent = `MT`;  console.log(cellsList[jLU]);
+                          jLU = jLU-10;     
+                        }else{break;}
+                      }
+                      jLB = jL+10;
+                      while(jLB<100 && jLB>=0){
+                        if((arrOfBombs.indexOf(jLB) == -1 && numbers.indexOf(jLB) == -1)){
+                          cellsList[jLB].textContent = `MT`;    console.log(cellsList[jLB]);
+                          jLB = jLB+10;
+                        }else{ break;}
+                      }
+                      jL = jL-1;           
+                    }else {break;}
+                    }    
+                }        
+                
+                   
+                jU = i-10;   
+                while(jU < 100 && jU >= 0) {
+                  if(arrOfBombs.indexOf(jU) == -1 && numbers.indexOf(jU) == -1 ){
+                    cellsList[jU].textContent = `MT`;        console.log(cellsList[jU]);
+                   jUR = jU+1;
+                    while(jUR<100 && jUR>=0){
+                      if(jUR % 10 == 9) {cellsList[jUR].textContent = `MT`; break;}  
+                      if((arrOfBombs.indexOf(jUR) == -1 && numbers.indexOf(jUR) == -1)){
+                        cellsList[jUR].textContent = `MT`;       console.log(cellsList[jUR]);
+                        jUR = jUR+1;  
+                      }else{break;}
+                    }
+                    jUL = jU-1;
+                    while(jUL<100 && jUL>=0){
+                      if(jUL % 10 == 0) {cellsList[jUL].textContent = `MT`; break;}  
+                      if((arrOfBombs.indexOf(jUL) == -1 && numbers.indexOf(jUL) == -1)){
+                        cellsList[jUL].textContent = `MT`;     console.log(cellsList[jUL]);
+                        jUL = jUL-1;      
+                      }else{break;}
+                    }
+                    jU = jU-10;       
+                  }else {break;}
+                }
+              
+         
+            }   
+              
+            }   
+            
+            }  
+       }
+
+
+    /*---------------------------------------------------------------------------------------*/
+        const mytbl = document.querySelector('table');
+    
+        mytbl.addEventListener('click', bombClick);
+
+        mytbl.addEventListener('click', numberGenerator);    
+        
+      mytbl.addEventListener('click', emptyHome);
+      
+      
+
+        </script>
+    </body>
+
+</html>
