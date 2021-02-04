@@ -1,0 +1,242 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>MineSweeper</title>
+        <style>
+            table {
+              border: 2px solid darkgrey;
+              margin: auto;
+            }
+            
+            td {
+              display: inline-block;
+              border:solid gray;
+              margin-top: 0px;
+              margin-bottom: 0px;
+              margin-left: 0px;
+              margin-right: 0px;
+              padding: 10px;
+              background-color:lightgray;
+              width: 12px;
+              height: 12px;
+         
+            }
+
+            p {
+                font-size: 30px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+
+        <script>
+
+        const p = document.createElement('p');
+        document.body.appendChild(p);
+        
+        const para = document.querySelector('p');
+     
+    /*----------------------------random------------------------------------------------*/     
+        function random(max, min) {
+          return Math.floor(Math.random() * (max - min +1) + min);  
+        } 
+    /*----------------------creating table dynamically----------------------------------*/
+        function createTable() {
+          
+          const myTable = document.createElement('table');
+          myTable.setAttribute('id', `myTable`);
+        
+          for(let i = 0; i<=9; i++){
+            const row = document.createElement('tr');
+         
+            for(let j = 0; j<=9; j++){
+              const cell = document.createElement('td');
+              cell.setAttribute('id', `[${i}][${j}]`);
+              row.appendChild(cell);
+            }
+              
+            myTable.appendChild(row);
+            }
+            document.body.appendChild(myTable);
+        } 
+    /*-------------------------calling function--------------------------------------------*/
+        createTable();  
+
+    /*--------------------------global scope arguments-------------------------------------*/
+        const cellsList = document.querySelectorAll('td');
+        let mycells = {}; 
+        let arrOfBombs = [];
+
+    /*-----------------------------making bombs------------------------------------------*/    
+        function bombGenerator(number) {
+          let myRandom ;  
+          let i = 0;
+
+          while(i<number){ 
+            myRandom = random(0,99);    
+            if(arrOfBombs.indexOf(myRandom) == -1){
+              arrOfBombs.push(myRandom);
+              Object.defineProperty(mycells, `${arrOfBombs[i]}`, {
+                value: `bomb`,
+                writable: true,
+                enumerable: true, 
+               }); 
+               
+               i++;
+          }    
+          }
+          
+          console.log(`arrOfBombs`, arrOfBombs);
+          console.log(mycells);
+        }
+    /*--------------------------------------------------------------------------------*/
+       
+        bombGenerator(12);
+
+    /*---------------------------------------------------------------------------------*/  
+ 
+      let myNum = {};
+      let counter = 0;
+      
+      function numGenerator(arrayOfBombs) {
+        for(let i = 0; i<cellsList.length; i++){
+           if(arrOfBombs.indexOf(i) == -1 ){
+
+            if(arrOfBombs.indexOf(i-11) != -1 && (i % 10 != 0)){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i-10) != -1){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i-9) != -1 && (i % 10 != 9)){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i-1) != -1 && (i % 10 != 0)){
+            counter ++;
+          }
+          if(arrOfBombs.indexOf(i+1) != -1 && (i % 10 != 9)){
+            counter ++;
+          
+          }
+          if(arrOfBombs.indexOf(i+9) != -1 && (i % 10 != 0)){
+            counter ++;
+          
+          }
+           if(arrOfBombs.indexOf(i+10) != -1){
+            counter ++;
+           
+          }
+         if(arrOfBombs.indexOf(i+11) != -1 && (i % 10 != 9)){
+            counter ++;
+          }
+         
+            
+          Object.defineProperty(myNum, `${i}`, {
+                value: counter,
+                writable: true,
+                enumerable: true, 
+               }); 
+          
+      
+         } 
+         counter = 0 ;
+        
+      }
+      }
+       
+    
+      numGenerator(arrOfBombs);
+      console.log(myNum);
+      
+     /*--------------------------------------------------------------------------------*/
+     
+       var result = [];
+       function empty(c){
+         if (c<0 || c>99){
+           return;
+          }
+          if (result.indexOf(c) != -1){
+            return;
+          }
+          if (myNum[c]>0) {
+            result.push(c);
+            return;
+           }
+
+          result.push(c);
+          empty(c+10);
+          empty(c-10);
+          if ((c%10 < 9)) {empty(c+1);}
+          if ((c%10 > 0)) {empty(c-1);}
+          if ((c%10 < 9)) {empty(c+11);}
+          if ((c%10 > 0)) {empty(c-11);}
+          if ((c%10 > 0)) {empty(c+9);}
+          if ((c%10 < 9)) {empty(c-9);}
+        }
+
+        
+       
+ 
+             
+           
+    
+       
+
+
+     /*--------------------------------------------------------------------------------*/
+        function bombClick(e){
+          for(let i = 0; i<cellsList.length; i++){
+            if(arrOfBombs.indexOf(i) != -1){
+              if(e.target == cellsList[i]){
+                for(let j = 0; j<arrOfBombs.length; j++){ 
+                  cellsList[arrOfBombs[j]].style.backgroundColor = 'black';
+                //cellsList[arrOfBombs[j]].value = `bomb`;
+                  para.textContent = `GAME OVER`;
+          //???       mytbl.removeEventListener('click',bombClick);
+                }
+              }
+            }
+           }
+                 
+        };
+    /*---------------------------------------------------------------------------------------*/
+
+
+    /*---------------------------------------------------------------------------------------*/
+        const mytbl = document.querySelector('table');
+    
+        mytbl.addEventListener('click', bombClick);
+
+        mytbl.addEventListener('click', function(e){
+          for(let i = 0; i < cellsList.length; i++){
+            if(e.target == cellsList[i]){
+              if (myNum[i]>0) {
+                cellsList[i].textContent = myNum[i];
+              }  
+              if(myNum[i] == 0 ) { 
+                empty(i);}
+              }
+            }
+          for (let j = 0; j<result.length; j++){
+              if (myNum[result[j]] == 0){ 
+                cellsList[result[j]].style.backgroundColor = 'darkgray';
+              }
+              else {
+                cellsList[result[j]].textContent = myNum[result[j]];
+              }
+            }
+          
+           result = [];
+
+        });    
+        
+
+      
+      
+
+        </script>
+    </body>
+
+</html>
