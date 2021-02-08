@@ -41,18 +41,17 @@
         const btn = document.querySelector('button');
 
     function myGame() {
-        const p = document.createElement('p');
-        document.body.appendChild(p);
+       const p = document.createElement('p');
+       document.body.appendChild(p);
         
-        const para = document.querySelector('p');
+       const para = document.querySelector('p');
      
     /*----------------------------random------------------------------------------------*/     
-        function random(max, min) {
+       function random(max, min) {
           return Math.floor(Math.random() * (max - min +1) + min);  
         } 
     /*----------------------creating table dynamically----------------------------------*/
-        function createTable() {
-          
+       function createTable() {
           const myTable = document.createElement('table');
           myTable.setAttribute('id', `myTable`);
         
@@ -195,8 +194,8 @@
       
      /*-------------------------------recursive for mts-------------------------------------*/
      
-       var result = [];
-       function empty(c){
+      var result = [];
+      function empty(c){
          if (c<0 || c>99){
            return;
           }
@@ -221,7 +220,7 @@
 
         
     /*-------------------------function EventListener for bombs------------------------------*/
-        function bombClick(e){
+       function bombClick(e){
           for(let i = 0; i<cellsList.length; i++){
             if(arrOfBombs.indexOf(i) != -1){
               if((e.target == cellsList[i]) && (mycells[i]['visible'] == false)){
@@ -257,7 +256,7 @@
               if(myNum[i] == 0 ) { 
                 empty(i);}
               }
-            }
+              }
           for (let j = 0; j<result.length; j++){
               if ((myNum[result[j]] == 0) && (mycells[result[j]]['visible'] == false)){ 
                 cellsList[result[j]].style.backgroundColor = 'darkgray';
@@ -267,7 +266,7 @@
                 cellsList[result[j]].textContent = myNum[result[j]];
                 mycells[result[j]]['visible']= true;
               }
-            }
+              }
           
            result = [];
 
@@ -296,7 +295,7 @@
         }
 
         mytbl.oncontextmenu = function(e){
-          e.preventDefault();  
+        e.preventDefault();  
         }
        
 
@@ -304,30 +303,29 @@
  
    /*----------------------remove EventListener for resting the game------------------------*/ 
    function removeE() { 
+      mytbl.removeEventListener('click', bombClick,true);
           
-        mytbl.removeEventListener('click', bombClick,true);
-          
-        mytbl.removeEventListener('click', function(e){
+      mytbl.removeEventListener('click', function(e){
          
-         for(let i = 0; i < cellsList.length; i++){
+        for(let i = 0; i < cellsList.length; i++){
            
-           if((e.target == cellsList[i]) && (mycells[i]['visible'] == false)){ 
-             if (myNum[i]>0) {
-               cellsList[i].textContent = myNum[i];
-               mycells[i]['visible'] = true;
-             }  
-             if(myNum[i] == 0 ) { 
+          if((e.target == cellsList[i]) && (mycells[i]['visible'] == false)){ 
+            if (myNum[i]>0) {
+              cellsList[i].textContent = myNum[i];
+              mycells[i]['visible'] = true;
+              }  
+            if(myNum[i] == 0 ) { 
                empty(i);}
              }
-           }
-         for (let j = 0; j<result.length; j++){
-             if ((myNum[result[j]] == 0) && (mycells[result[j]]['visible'] == false)){ 
-               cellsList[result[j]].style.backgroundColor = 'darkgray';
-               mycells[result[j]]['visible'] = true;
              }
-             if ((myNum[result[j]]>0) && (mycells[result[j]]['visible'] == false)) {
-               cellsList[result[j]].textContent = myNum[result[j]];
-               mycells[result[j]]['visible']= true;
+         for (let j = 0; j<result.length; j++){
+            if ((myNum[result[j]] == 0) && (mycells[result[j]]['visible'] == false)){ 
+              cellsList[result[j]].style.backgroundColor = 'darkgray';
+              mycells[result[j]]['visible'] = true;
+             }
+            if ((myNum[result[j]]>0) && (mycells[result[j]]['visible'] == false)) {
+              cellsList[result[j]].textContent = myNum[result[j]];
+              mycells[result[j]]['visible']= true;
              }
            }
          
